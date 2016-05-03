@@ -22,6 +22,9 @@ RUN 	pip install --upgrade pip
 ADD 	pip-dependencies.txt /tmp/pip-dependencies.txt
 RUN 	pip install --upgrade -r /tmp/pip-dependencies.txt
 
+# Clone Lasagne source tree
+RUN	git clone https://github.com/Lasagne/Lasagne.git /home/daniel
+
 # Include bash configuration repo
 ADD     bashrc /home/daniel/.bashrc
 
