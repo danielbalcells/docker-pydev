@@ -1,13 +1,14 @@
 FROM	python:2.7
 
-# Add user daniel. Add to docker group, enable sudo permissions and create password
+# Add user daniel. Add to docker group, enable sudo permissions and
+# create password
 RUN \
 	adduser --uid 1000 --disabled-password --gecos '' daniel && \
     	groupadd -g 999 docker && \
 	usermod -a -G docker daniel && \
 	usermod -a -G sudo daniel && \
 	echo 'daniel:$1$jkbX2ik/$frBt1wS6fqLDQlwTSMapS1' | chpasswd -e
-	
+
 
 # Add system dependencies
 ADD	apt-sys-dependencies.txt /tmp/apt-sys-dependencies.txt
@@ -22,16 +23,36 @@ RUN 	pip install --upgrade pip
 ADD 	pip-dependencies.txt /tmp/pip-dependencies.txt
 RUN 	pip install --upgrade -r /tmp/pip-dependencies.txt
 
+# Install CUDA stuff -taken from https://hub.docker.com/r/tleyden5iwx/ubuntu-cuda/~/dockerfile/
+ENV 	CUDA_RUN http://developer.download.nvidia.com/compute/cuda/6_5/rel/installers/cuda_6.5.14_linux_64.run
+RUN 	apt-get update && apt-get install -q -y \
+	wget \
+	build-essential
+RUN 	cd /opt && \
+ 	wget $CUDA_RUN && \
+	chmod +x *.run && \
+	mkdir nvidia_installers && \
+	./cuda_6.5.14_linux_64.run -extract=`pwd`/nvidia_installers && \
+	cd nvidia_installers && \
+	./NVIDIA-Linux-x86_64-340.29.run -s -N --no-kernel-module
+
+RUN 	cd /opt/nvidia_installers && \
+	./cuda-linux64-rel-6.5.14-18749181.run -noprompt
+# 	Ensure the CUDA libs and binaries are in the correct environment variables
+ENV 	LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-6.5/lib64
+ENV 	PATH=$PATH:/usr/local/cuda-6.5/bin
+
+RUN	cd /
+
 # Clone Lasagne source tree
-RUN	git clone https://github.com/Lasagne/Lasagne.git /home/daniel/lasagne && \
-	chown -R daniel:daniel /home/daniel/lasagne
+RUN	git clone https://github.com/Lasagne/Lasagne.git /home/daniel/lasagne
 
 # Include bash configuration repo
 ADD     bashrc /home/daniel/.bashrc
 
 RUN	mkdir /home/daniel/.bash && \
 	git clone https://github.com/danielbalcells/.bash.git \
-		/home/daniel/.bash 
+		/home/daniel/.bash
 
 # These sould be moved to the system dependencies and python dependencies
 # sections above. I put them here for now to avoid rebuilding intermediate
@@ -65,6 +86,7 @@ VOLUME	/home/daniel/code
 ADD	upon_start.sh /usr/local/bin/upon_start.sh
 RUN	chmod +x /usr/local/bin/upon_start.sh
 
+RUN	chown -R daniel:daniel /home/daniel
 USER	daniel
 WORKDIR	/home/daniel
 CMD ["upon_start.sh"]
