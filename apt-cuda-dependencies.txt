@@ -1,0 +1,4 @@
+wget
+build-essential
+module-init-tools
+kmod

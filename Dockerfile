@@ -24,15 +24,14 @@ ADD 	pip-dependencies.txt /tmp/pip-dependencies.txt
 RUN 	pip install --upgrade -r /tmp/pip-dependencies.txt
 
 # Install CUDA stuff -taken from https://hub.docker.com/r/tleyden5iwx/ubuntu-cuda/~/dockerfile/
+ADD	apt-cuda-dependencies.txt /tmp/apt-cuda-dependencies.txt
+RUN	apt-get update && apt-get install -y $(cat /tmp/apt-cuda-dependencies.txt)
+
 ENV 	CUDA_RUN http://developer.download.nvidia.com/compute/cuda/6_5/rel/installers/cuda_6.5.14_linux_64.run
-
-RUN 	apt-get update && apt-get install -q -y \
-	wget \
-	build-essential
-
 RUN 	cd /opt && \
  	wget $CUDA_RUN
-RUN	chmod +x *.run && \
+RUN	cd /opt && \
+	chmod +x *.run && \
 	mkdir nvidia_installers && \
 	./cuda_6.5.14_linux_64.run -extract=/opt/nvidia_installers && \
 	cd nvidia_installers && \
@@ -43,8 +42,6 @@ RUN 	cd /opt/nvidia_installers && \
 # 	Ensure the CUDA libs and binaries are in the correct environment variables
 ENV 	LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-6.5/lib64
 ENV 	PATH=$PATH:/usr/local/cuda-6.5/bin
-
-RUN	cd /
 
 # Clone Lasagne source tree
 RUN	git clone https://github.com/Lasagne/Lasagne.git /home/daniel/lasagne
