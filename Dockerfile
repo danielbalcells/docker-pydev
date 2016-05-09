@@ -67,6 +67,11 @@ RUN 	cd /tmp && \
 #	Install the same driver version as in baguette
 RUN 	apt-get install -y libcuda1-352=352.93-0ubuntu1
 
+#	Tell theano to use GPU
+ADD	theanorc /home/daniel/.theanorc
+
+RUN	chown daniel:daniel /home/daniel/.theanorc && \
+	chmod -R 775 /home/daniel/.theanorc
 
 # Clone Lasagne source tree
 RUN	git clone https://github.com/Lasagne/Lasagne.git /home/daniel/lasagne
