@@ -23,6 +23,14 @@ RUN 	pip install --upgrade pip
 ADD 	pip-dependencies.txt /tmp/pip-dependencies.txt
 RUN 	pip install --upgrade -r /tmp/pip-dependencies.txt
 
+#	Python speech features library -install from source
+RUN	git clone https://github.com/jameslyons/python_speech_features /home/daniel/python_speech_features && \
+	cd /home/daniel/python_speech_features && \
+	python setup.py install
+
+# Clone Lasagne source tree
+RUN	git clone https://github.com/Lasagne/Lasagne.git /home/daniel/lasagne
+
 
 # Enable CUDA support -taken from https://bitbucket.org/cseguramail/machinelearningdocker
 #	Install dependencies
@@ -40,14 +48,9 @@ RUN 	cd /tmp && \
   	./cuda-linux64-rel-*.run -noprompt && \
 # 	Clean up
   	rm -rf *
-
 # 	Add CUDA variables to path
 ENV 	PATH=/usr/local/cuda/bin:$PATH \
-  	LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
-  
-  
-
-  
+ 	LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH  
 #	Install cuDNN
 # 	Install CUDA repo (needed for cuDNN)
 ENV 	CUDA_REPO_PKG=cuda-repo-ubuntu1404_7.5-18_amd64.deb
@@ -55,7 +58,6 @@ RUN 	cd /tmp && \
 	wget http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1404/x86_64/$CUDA_REPO_PKG && \
 	dpkg -i $CUDA_REPO_PKG && \
 	rm $CUDA_REPO_PKG
-
 # 	Install cuDNN v4
 ENV 	ML_REPO_PKG=nvidia-machine-learning-repo_4.0-2_amd64.deb
 RUN 	cd /tmp && \
@@ -63,18 +65,12 @@ RUN 	cd /tmp && \
 	dpkg -i $ML_REPO_PKG && \
 	apt-get update && apt-get install -y libcudnn4 libcudnn4-dev && \
 	rm $ML_REPO_PKG
-  
 #	Install the same driver version as in baguette
 RUN 	apt-get install -y libcuda1-352=352.93-0ubuntu1
-
 #	Tell theano to use GPU
 ADD	theanorc /home/daniel/.theanorc
-
 RUN	chown daniel:daniel /home/daniel/.theanorc && \
 	chmod -R 775 /home/daniel/.theanorc
-
-# Clone Lasagne source tree
-RUN	git clone https://github.com/Lasagne/Lasagne.git /home/daniel/lasagne
 
 # Include bash configuration repo
 ADD     bashrc /home/daniel/.bashrc
