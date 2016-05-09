@@ -26,7 +26,9 @@ RUN 	pip install --upgrade -r /tmp/pip-dependencies.txt
 #	Python speech features library -install from source
 RUN	git clone https://github.com/jameslyons/python_speech_features /home/daniel/python_speech_features && \
 	cd /home/daniel/python_speech_features && \
-	python setup.py install
+	python setup.py install && \
+	chown -R daniel:daniel /home/daniel/python_speech_features && \
+	chmod -R 775 /home/daniel/python_speech_features
 
 # Clone Lasagne source tree
 RUN	git clone https://github.com/Lasagne/Lasagne.git /home/daniel/lasagne
