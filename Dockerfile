@@ -106,8 +106,8 @@ RUN	chown -R daniel:daniel /home/daniel/.jupyter && \
 	chmod -R 775 /home/daniel/.jupyter
 EXPOSE	8888
 
-# Prepare volume for code
-VOLUME	/home/daniel/code
+# Prepare volume for external code
+VOLUME	/home/daniel/ext
 
 # Add script to run stuff upon launching container
 ADD	upon_start.sh /usr/local/bin/upon_start.sh
@@ -122,7 +122,7 @@ ADD     bashrc /home/b.dbe/.bashrc
 RUN     mkdir /home/b.dbe/.bash && \
         git clone https://github.com/danielbalcells/.bash.git \
                 /home/b.dbe/.bash
-VOLUME	/home/b.dbe/code
+VOLUME	/home/b.dbe/ext
 ADD	upon_start_tid.sh /usr/local/bin/upon_start_tid.sh
 RUN	chmod +x /usr/local/bin/upon_start_tid.sh
 RUN	chown -R b.dbe:speech /home/b.dbe

@@ -1,5 +1,5 @@
 #! /bin/bash
-# Usage: ./launch.sh code_dir container_name
+# Usage: ./launch.sh ext_code_dir container_name
 DEFAULT_GPU_OPTS="--device /dev/nvidia0:/dev/nvidia0 \
         --device /dev/nvidia1:/dev/nvidia1 \
         --device /dev/nvidiactl:/dev/nvidiactl \
@@ -13,7 +13,7 @@ else
 fi
 
 cmd="docker run -it --detach --net=host --name=$containername -P -p 80:80 \
-        -u b.dbe:speech -v $codedir:/home/b.dbe/code \
+        -u b.dbe:speech -v $codedir:/home/b.dbe/ext \
         $gpuopts \
         -w /home/b.dbe
 	danielbalcells/pydev:latest upon_start_tid.sh"
