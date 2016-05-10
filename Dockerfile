@@ -125,6 +125,7 @@ RUN     mkdir /home/b.dbe/.bash && \
 VOLUME	/home/b.dbe/code
 ADD	upon_start_tid.sh /usr/local/bin/upon_start_tid.sh
 RUN	chmod +x /usr/local/bin/upon_start_tid.sh
+RUN	chown -R b.dbe:speech /home/b.dbe
 
 RUN	chown -R daniel:daniel /home/daniel
 USER	daniel
