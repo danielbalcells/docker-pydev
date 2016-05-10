@@ -13,8 +13,8 @@ else
 fi
 
 cmd="docker run -it --detach --net=host --name=$containername -P -p 80:80 \
-        -u daniel:daniel -v $codedir:/home/daniel/code \
+        -u b.dbe:speech -v $codedir:/home/b.dbe/code \
         $gpuopts \
-        danielbalcells/pydev:latest"
+        danielbalcells/pydev:latest upon_start_tid.sh"
 echo $cmd
 $cmd

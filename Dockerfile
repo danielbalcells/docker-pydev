@@ -113,6 +113,19 @@ VOLUME	/home/daniel/code
 ADD	upon_start.sh /usr/local/bin/upon_start.sh
 RUN	chmod +x /usr/local/bin/upon_start.sh
 
+# TID user compatibility
+RUN     adduser --uid 43005 --disabled-password --force-badname --gecos '' b.dbe && \
+        groupadd -g 2520 speech && \
+	usermod -a -G speech b.dbe && \
+	usermod -a -G speech daniel
+ADD     bashrc /home/b.dbe/.bashrc
+RUN     mkdir /home/b.dbe/.bash && \
+        git clone https://github.com/danielbalcells/.bash.git \
+                /home/b.dbe/.bash
+VOLUME	/home/b.dbe/code
+ADD	upon_start_tid.sh /usr/local/bin/upon_start_tid.sh
+RUN	chmod +x /usr/local/bin/upon_start_tid.sh
+
 RUN	chown -R daniel:daniel /home/daniel
 USER	daniel
 WORKDIR	/home/daniel
