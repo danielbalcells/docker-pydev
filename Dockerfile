@@ -77,8 +77,8 @@ RUN	chown daniel:daniel /home/daniel/.theanorc && \
 # Include bash configuration repo
 ADD     bashrc /home/daniel/.bashrc
 
-RUN	mkdir /home/daniel/.bash && \
-	git clone https://github.com/danielbalcells/.bash.git \
+RUN	mkdir /home/daniel/dotfiles && \
+	git clone https://github.com/danielbalcells/dotfiles.git \
 		/home/daniel/.bash
 
 # These sould be moved to the system dependencies and python dependencies
@@ -122,8 +122,8 @@ RUN     adduser --uid 43005 --disabled-password --force-badname --gecos '' b.dbe
 	usermod -a -G speech daniel
 # Include bash configuration repo
 ADD     bashrc /home/b.dbe/.bashrc
-RUN     mkdir /home/b.dbe/.bash && \
-        git clone https://github.com/danielbalcells/.bash.git \
+RUN     mkdir /home/b.dbe/dotfiles && \
+        git clone https://github.com/danielbalcells/dotfiles.git \
                 /home/b.dbe/.bash
 # Prepare volume for code
 VOLUME	/home/b.dbe/ext
