@@ -74,12 +74,11 @@ ADD	theanorc /home/daniel/.theanorc
 RUN	chown daniel:daniel /home/daniel/.theanorc && \
 	chmod -R 775 /home/daniel/.theanorc
 
-# Include bash configuration repo
-ADD     bashrc /home/daniel/.bashrc
-
-RUN	mkdir /home/daniel/dotfiles && \
+# Include dotfiles configuration repo
+RUN	mkdir /home/daniel/.dotfiles && \
 	git clone https://github.com/danielbalcells/dotfiles.git \
-		/home/daniel/.bash
+		/home/daniel/.dotfiles && \
+	/home/daniel/.dotfiles/configure.sh
 
 # These sould be moved to the system dependencies and python dependencies
 # sections above. I put them here for now to avoid rebuilding intermediate
