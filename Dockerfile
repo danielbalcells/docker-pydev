@@ -76,9 +76,9 @@ RUN	chown daniel:daniel /home/daniel/.theanorc && \
 
 # Include dotfiles configuration repo
 RUN	mkdir /home/daniel/.dotfiles && \
-	git clone https://github.com/danielbalcells/dotfiles.git \
+	git clone https://bitbucket.org/danielbalcells/dotfiles.git \
 		/home/daniel/.dotfiles && \
-	/home/daniel/.dotfiles/configure.sh
+	/home/daniel/.dotfiles/configure.sh /home/daniel/.dotfiles /home/daniel
 
 # These sould be moved to the system dependencies and python dependencies
 # sections above. I put them here for now to avoid rebuilding intermediate
@@ -119,11 +119,13 @@ RUN     adduser --uid 43005 --disabled-password --force-badname --gecos '' b.dbe
         groupadd -g 2520 speech && \
 	usermod -a -G speech b.dbe && \
 	usermod -a -G speech daniel
-# Include bash configuration repo
-ADD     bashrc /home/b.dbe/.bashrc
-RUN     mkdir /home/b.dbe/dotfiles && \
-        git clone https://github.com/danielbalcells/dotfiles.git \
-                /home/b.dbe/.bash
+
+# Include dotfiles configuration repo
+RUN	mkdir /home/b.dbe/.dotfiles && \
+	git clone https://bitbucket.org/danielbalcells/dotfiles.git \
+		/home/b.dbe/.dotfiles && \
+	/home/b.dbe/.dotfiles/configure.sh /home/b.dbe/.dotfiles /home/b.dbe
+
 # Prepare volume for code
 VOLUME	/home/b.dbe/ext
 # 	Add script to run stuff upon launching container
