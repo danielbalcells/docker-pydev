@@ -113,36 +113,6 @@ ADD	upon_start.sh /usr/local/bin/upon_start.sh
 RUN	chmod +x /usr/local/bin/upon_start.sh
 
 RUN	chown -R daniel:daniel /home/daniel
-
-# TID user compatibility
-RUN     adduser --uid 43005 --disabled-password --force-badname --gecos '' b.dbe && \
-        groupadd -g 2520 speech && \
-	usermod -a -G speech b.dbe && \
-	usermod -a -G speech daniel
-
-# Include dotfiles configuration repo
-RUN	mkdir /home/b.dbe/.dotfiles && \
-	git clone https://bitbucket.org/danielbalcells/dotfiles.git \
-		/home/b.dbe/.dotfiles && \
-	/home/b.dbe/.dotfiles/configure.sh /home/b.dbe/.dotfiles /home/b.dbe
-
-# Prepare volume for code
-VOLUME	/home/b.dbe/ext
-# 	Add script to run stuff upon launching container
-ADD	upon_start_tid.sh /usr/local/bin/upon_start_tid.sh
-RUN	chmod +x /usr/local/bin/upon_start_tid.sh
-# 	Add jupyter notebook server files
-RUN	mkdir /home/b.dbe/.jupyter
-#		Generate web certificates
-RUN	openssl req -x509 -nodes -days 365 -newkey rsa:1024 \
-	-keyout  /home/b.dbe/.jupyter/mykey.key \
-	-out  /home/b.dbe/.jupyter/mycert.pem \
-	-subj "/C=GB/ST=London/L=London/O=Global Security/OU=IT Department/CN=example.com"
-ADD	jupyter_notebook_config_tid.py /home/b.dbe/.jupyter/jupyter_notebook_config.py
-RUN	chown -R b.dbe:speech /home/b.dbe/ && \
-	chmod -R 775 /home/b.dbe/
-
-
 USER	daniel
 WORKDIR	/home/daniel
 CMD ["upon_start.sh"]
